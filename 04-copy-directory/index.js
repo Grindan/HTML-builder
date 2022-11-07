@@ -11,8 +11,8 @@ const copy = async (sourceFolderPath, destinationFolderPath) => {
             await fs.copyFile(`${sourceFolderPath}/${file.name}`, `${destinationFolderPath}/${file.name}`);
         } else {
             const newFolder = path.join(destinationFolderPath, file.name);
-            await mkdir(newFolder, { recursive: true });
-            await copy(`${sourceFolder}/${file.name}`, `${destinationFolder}/${file.name}`);
+            await fs.mkdir(newFolder, { recursive: true });
+            await copy(`${sourceFolderPath}/${file.name}`, `${destinationFolderPath}/${file.name}`);
         }
     }
 

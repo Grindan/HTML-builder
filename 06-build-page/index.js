@@ -18,6 +18,30 @@ const mergeStyles = async () => {
     await merge(sourcePath, destinationPath);
 };
 
+const buildTemplate = async () => {
+    const htmlPath = path.join(__dirname, 'template.html');
+    let html = await fs.readFile(htmlPath, { encoding: 'utf-8' });
+
+    const componentFolderPath = path.join(__dirname, 'components');
+    const componentFiles = await fs.readdir(componentFolderPath);
+    const components = await componentFiles.reduce(async (acc, fileName) => {
+        const extname = path.extname(fileName);
+        const basename = path.basename(fileName, extname);
+
+        const componentFilePath = path.join(__dirname, 'components', fileName);
+        const componentHtml = await fs.readFile(componentFilePath, { encoding: 'utf-8' });
+        acc[`{{${basename}}}`] = componentHtml;
+
+        const re = new RegExp(`{{${basename}}}`, 'g');
+        html = html.replace(re, componentHtml);
+
+        return acc;
+    }, {});
+
+    const destinationHtmlPath = path.join(__dirname, 'project-dist/template.html');
+    await fs.writeFile(destinationHtmlPath, html, { flag: 'wx' });
+};
+
 const build = async () => {
     const folderPath = path.join(__dirname, 'project-dist');
 
@@ -26,6 +50,7 @@ const build = async () => {
 
     await copyAssets();
     await mergeStyles();
+    await buildTemplate();
 };
 
 build();

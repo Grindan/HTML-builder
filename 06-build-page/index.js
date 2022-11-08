@@ -13,7 +13,7 @@ const copyAssets = async () => {
 
 const mergeStyles = async () => {
     const sourcePath = path.join(__dirname, 'styles');
-    const destinationPath = path.join(__dirname, 'project-dist/bundle.css');
+    const destinationPath = path.join(__dirname, 'project-dist/style.css');
 
     await merge(sourcePath, destinationPath);
 };
